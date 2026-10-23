@@ -1,5 +1,5 @@
-import { useEffect, useEffectEvent, useState } from "react"
-import Oracle from "./Oracle"
+import { useEffect, useEffectEvent, useState } from "react";
+import Oracle from "./Oracle";
 
 type Guess = {
     typedLetter: string;
@@ -7,16 +7,26 @@ type Guess = {
 }
 
 const OracleView = () => {
-    const [oracle, setOracle] = useState<Oracle>(new Oracle())
-    const [guesses, setGuesses] = useState<Guess[]>([])
-    const [correctPredictions, setCorrectPredictions] = useState<number>(0)
+    const [oracle, setOracle] = useState<Oracle>(new Oracle());
+    const [guesses, setGuesses] = useState<Guess[]>([]);
+    const [correctPredictions, setCorrectPredictions] = useState<number>(0);
+
+    const onLetterPress = (letter: string) => {
+        const prediction = oracle.predictLetter();
+        setGuesses([...guesses, { typedLetter: letter, predictedLetter: prediction }]);
+        if (letter === prediction) {
+            setCorrectPredictions(correctPredictions + 1);
+        }
+        oracle.recordLetter(letter);
+        setOracle(oracle);
+    }; 
 
     const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
-        let lowerKey = event.key?.toLowerCase() 
+        const lowerKey = event.key?.toLowerCase(); 
         if (lowerKey === 'd' || lowerKey === 'f') {
-            onLetterPress(lowerKey)
+            onLetterPress(lowerKey);
         }
-    })
+    });
     
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown);
@@ -24,16 +34,6 @@ const OracleView = () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
-
-    const onLetterPress = (letter: string) => {
-        let prediction = oracle.predictLetter()
-        setGuesses([...guesses, { typedLetter: letter, predictedLetter: prediction }])
-        if (letter === prediction) {
-            setCorrectPredictions(correctPredictions + 1)
-        }
-        oracle.recordLetter(letter)
-        setOracle(oracle)
-    } 
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -48,7 +48,7 @@ const OracleView = () => {
                 </div>
             ))}
         </div>
-    )
-}
+    );
+};
 
-export default OracleView
+export default OracleView;

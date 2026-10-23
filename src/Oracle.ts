@@ -5,49 +5,49 @@ export type FivegramCount = {
 
 // Oracle predicts guessed letters from the history of previously guessed letters
 class Oracle {
-    fivegramCounts: Map<string, FivegramCount> // Count of 
-    recordedLetters: string[]
+    fivegramCounts: Map<string, FivegramCount>; // Count of letters after recorded fivegrams
+    recordedLetters: string[];
 
     constructor(fivegramCounts: Map<string, FivegramCount> = new Map()) {
-        this.fivegramCounts = fivegramCounts
-        this.recordedLetters = []
+        this.fivegramCounts = fivegramCounts;
+        this.recordedLetters = [];
     }
 
     // Predict a new letter using the fivegram count history
     predictLetter(): string {
-        let fivegramCount = this.fivegramCounts.get(this.recordedLetters.join(''))
+        const fivegramCount = this.fivegramCounts.get(this.recordedLetters.join(''));
         if (!fivegramCount) {
-            return 'f'
+            return 'f';
         }
         if (fivegramCount?.dCount > fivegramCount?.fCount) {
-            return 'd'
+            return 'd';
         } else {
-            return 'f'
+            return 'f';
         }
     }
 
     // Record a letter input
     recordLetter(letter: string) {
         if (letter !== 'f' && letter !== 'd') {
-            return // sanity check that the letter is valid
+            return; // sanity check that the letter is valid
         }
         if (this.recordedLetters.length == 5) {
             // Add count if the previous letters form a fivegram
-            let fivegram = this.recordedLetters.join('')
-            let fivegramCount = this.fivegramCounts.get(fivegram)
+            const fivegram = this.recordedLetters.join('');
+            let fivegramCount = this.fivegramCounts.get(fivegram);
             if (!fivegramCount) {
-                fivegramCount = { fCount: 0, dCount: 0 }
+                fivegramCount = { fCount: 0, dCount: 0 };
             }
             if (letter === 'f') {
-                fivegramCount.fCount++
+                fivegramCount.fCount++;
             } else {
-                fivegramCount.dCount++
+                fivegramCount.dCount++;
             }
-            this.fivegramCounts.set(fivegram, fivegramCount)
-            this.recordedLetters = this.recordedLetters.filter((_, i) => i !== 0) // pop first element
+            this.fivegramCounts.set(fivegram, fivegramCount);
+            this.recordedLetters = this.recordedLetters.filter((_, i) => i !== 0); // pop first element
         }
-        this.recordedLetters.push(letter)
+        this.recordedLetters.push(letter);
     }
 }
 
-export default Oracle
+export default Oracle;

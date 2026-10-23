@@ -1,4 +1,4 @@
-import Oracle, { type FivegramCount } from "./Oracle";
+import Oracle, { type FivegramCount } from "./Oracle.ts";
 
 describe('test predictions', () => {
     test("should predict 'f' with insufficient guesses", () => {

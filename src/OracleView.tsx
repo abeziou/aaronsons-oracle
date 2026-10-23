@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useState } from "react";
-import Oracle from "./Oracle";
+import Oracle from "./Oracle.ts";
 
 type Guess = {
     typedLetter: string;

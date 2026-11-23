@@ -3,5 +3,9 @@ import './index.css';
 import OracleView from './OracleView.tsx';
 
 createRoot(document.getElementById('root')!).render(
-    <OracleView />
+    <div>
+        <header>Aaronson's Oracle</header>
+        <OracleView />
+    </div>
+    
 );

@@ -82,7 +82,7 @@ const OracleView = () => {
                 {
                     guesses?.length ? 
                         `Correctly Predicted: ${(correctPredictions / guesses.length * 100).toFixed(0)}%` : 
-                        <TypingText text="Press 'd' or 'f' and the Oracle will predict your typing..."/>       
+                        <TypingText text="Keep pressing 'd' or 'f' and the Oracle will predict your next guess..."/>       
                 }
             </div>
             

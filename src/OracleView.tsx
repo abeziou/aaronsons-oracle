@@ -26,18 +26,6 @@ const CrystalBall = (props: CrystalBallProps) => {
     );
 };
 
-type TypingTextProps = {
-    text: string
-};
-
-const TypingText = (props: TypingTextProps) => {
-    return (
-        <div className="typing-text" style={{ animation: `typing 2.5s steps(${props.text.length}, end)` }}>
-            {props.text}
-        </div>
-    );
-};
-
 const OracleView = () => {
     const [oracle, setOracle] = useState<Oracle>(new Oracle());
     const [guesses, setGuesses] = useState<Guess[]>([]);
@@ -77,19 +65,21 @@ const OracleView = () => {
             <div className="fade-down-anim" style={{ display: "flex", justifyContent: "center" }}>
                 <CrystalBall predictedLetter={lastPrediction} correct={correctPrediction} />
             </div>
-            
-            <div className="hint-text fade-up-anim">
-                {
-                    guesses?.length ? 
+
+            <div className="fade-up-anim">
+                <div className="hint-text">
+                    {
+                        guesses?.length ? 
                         `Correctly Predicted: ${(correctPredictions / guesses.length * 100).toFixed(0)}%` : 
-                        <TypingText text="Keep pressing 'd' or 'f' and the Oracle will predict your next guess..."/>       
-                }
+                        "Keep pressing 'd' or 'f' and the Oracle will predict your next guess..."   
+                    }
+                </div>
+                
+                <span className="button-group">
+                    <button className="kbd-button" onClick={() => onLetterPress('d')}>d</button>
+                    <button className="kbd-button" onClick={() => onLetterPress('f')}>f</button>
+                </span>
             </div>
-            
-            <span className="button-group fade-up-anim">
-                <button className="kbd-button" onClick={() => onLetterPress('d')}>d</button>
-                <button className="kbd-button" onClick={() => onLetterPress('f')}>f</button>
-            </span>
         </div>
     );
 };

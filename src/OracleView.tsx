@@ -6,15 +6,40 @@ type Guess = {
     predictedLetter: string;
 }
 
+type CrystalBallProps = {
+    predictedLetter?: string;
+    correct?: boolean;
+};
+
+const CrystalBall = (props: CrystalBallProps) => {
+    let className = `crystal-ball`;
+    if (props?.correct) {
+        className += " correct-guess";
+    } else {
+        className += " incorrect-guess";
+    }
+
+    return (
+        <div className={className}>
+            {props?.predictedLetter}
+        </div>
+    );
+};
+
 const OracleView = () => {
     const [oracle, setOracle] = useState<Oracle>(new Oracle());
     const [guesses, setGuesses] = useState<Guess[]>([]);
     const [correctPredictions, setCorrectPredictions] = useState<number>(0);
+    const [lastPrediction, setLastPrediction] = useState<string | undefined>();
+    const [correctPrediction, setCorrectPrediction] = useState<boolean | undefined>();
 
     const onLetterPress = (letter: string) => {
         const prediction = oracle.predictLetter();
+        setLastPrediction(prediction);
         setGuesses([...guesses, { typedLetter: letter, predictedLetter: prediction }]);
-        if (letter === prediction) {
+        const isCorrect = letter === prediction;
+        setCorrectPrediction(isCorrect);
+        if (isCorrect) {
             setCorrectPredictions(correctPredictions + 1);
         }
         oracle.recordLetter(letter);
@@ -27,7 +52,7 @@ const OracleView = () => {
             onLetterPress(lowerKey);
         }
     });
-    
+
     useEffect(() => {
         window.addEventListener("keydown", handleKeyDown);
         return () => {
@@ -37,16 +62,15 @@ const OracleView = () => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <CrystalBall predictedLetter={lastPrediction} correct={correctPrediction} />
+            </div>
+            
             Hit Rate: { (guesses?.length > 0 ? (correctPredictions / guesses.length * 100) : 0).toFixed(0)}%
-            <span>
-                <button onClick={() => onLetterPress('d')}>d</button>
-                <button onClick={() => onLetterPress('f')}>f</button>
+            <span className="button-group">
+                <button className="kbd-button" onClick={() => onLetterPress('d')}>d</button>
+                <button className="kbd-button" onClick={() => onLetterPress('f')}>f</button>
             </span>
-            {guesses.map((guess, i) => (
-                <div key={i}>
-                    Entered: {guess.typedLetter}, Predicted: {guess.predictedLetter}
-                </div>
-            ))}
         </div>
     );
 };
